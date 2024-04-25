@@ -4,6 +4,7 @@ import argparse
 import torch
 from torchvision import datasets, transforms
 from tqdm import tqdm
+import os
 
 
 def parse_args():
@@ -28,7 +29,9 @@ def train(model, dataset, batch_size, epochs, criterion, optimizer):
         val_acc = evaluate(model, dataset, 1000)
         print(f'Epoch {epoch + 1}/{epochs}, Loss: {loss.item()}, Val. acc.: {val_acc}')
 
-    torch.save(model.state_dict(), model.__class__.__name__ + '.pth')
+    if not os.path.exists(os.path.join('..', 'models')):
+        os.makedirs(os.path.join('..', 'models'))
+    torch.save(model.state_dict(), os.path.join('..', 'models', model.__class__.__name__ + '.pth'))
 
 def evaluate(model, dataset, test_sample_size):
     model.eval()
